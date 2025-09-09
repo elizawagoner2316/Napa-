@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1311">
+<title>Napa Awaits — Just Us</title>
+<style>
+  :root{
+    --bg:#0e0a08;
+    --ink:#fbf7f2;
+    --gold:#d8c3a5;
+    --accent:#6b2e2e;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family: ui-serif, Georgia, 'Times New Roman', serif;background:var(--bg);color:var(--ink);}
+  body{overflow-x:hidden}
+  .wrap{scroll-snap-type:y mandatory;height:100vh;overflow-y:scroll;-webkit-overflow-scrolling:touch}
+  section{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:22vh 20px 24px;background-position:center;background-size:cover;background-repeat:no-repeat;scroll-snap-align:start}
+  .veil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.78) 100%);}
+  h1,h2,h3{margin:0 0 .4rem 0;letter-spacing:.03em}
+  h1{font-size: clamp(32px, 6vw, 52px); font-weight:600}
+  h2{font-size: clamp(22px, 4.5vw, 36px); font-weight:500}
+  p{margin:.25rem 0 0 0;line-height:1.55;font-size:clamp(16px, 3.5vw, 18px)}
+  .card{backdrop-filter: blur(10px); background: rgba(14, 10, 8, .55); border:1px solid rgba(216,195,165,.35); border-radius:18px; padding:16px; max-width:720px; margin:0 auto; width:100%}
+  .note{font-style:italic;opacity:.95}
+  .pill{display:inline-block;border:1px solid var(--gold);border-radius:999px;padding:.35rem .7rem;margin:.25rem .35rem 0 0;font-size:.85rem;color:var(--ink);text-transform:uppercase;letter-spacing:.08em}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .qr{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(216,195,165,.35);border-radius:12px;background:rgba(0,0,0,.35)}
+  .qr img{width:68px;height:68px;border-radius:8px;display:block}
+  .qr .meta{font-size:.9rem}
+  .footer{position:fixed;right:12px;bottom:14px;display:flex;gap:8px;z-index:99;opacity:.95}
+  .btn{appearance:none;border:1px solid rgba(216,195,165,.5);background:rgba(0,0,0,.45);color:var(--ink);padding:.55rem .8rem;border-radius:999px;font-size:.95rem}
+  .btn:active{transform:scale(.98)}
+  .gate{position:fixed;inset:0;background:radial-gradient(1200px 800px at 50% 30%, rgba(107,46,46,.38), rgba(0,0,0,.93));display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:9999;text-align:center;padding:24px;transition:opacity .35s ease}
+  .gate.hidden{opacity:0;pointer-events:none}
+  .gate h2{font-size:clamp(24px,5vw,42px);margin-bottom:.5rem}
+  .gate .sub{opacity:.9;margin-bottom:1rem}
+  .gate input{width:min(320px,80vw);padding:.7rem 1rem;border-radius:12px;border:1px solid rgba(216,195,165,.5);background:rgba(0,0,0,.45);color:var(--ink);font-size:1rem;text-align:center;letter-spacing:.15em}
+  .err{color:#ffb3b3;margin-top:.5rem;min-height:1.2em}
+  .tiny{font-size:.8rem;opacity:.8}
+  .credits{font-size:.75rem;opacity:.7;margin-top:.6rem}
+  .fade{animation:fadeIn .6s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none}}
+  @supports(padding:max(0px)){ .footer{padding-bottom: max(12px, env(safe-area-inset-bottom))} }
+</style>
+</head>
+<body>
+<div class="gate" id="gate">
+  <h2 class="fade">Napa Awaits… Just Us</h2>
+  <div class="sub tiny fade">Enter passcode to begin • Sound available after unlock 🎷</div>
+  <input id="code" class="fade" placeholder="Passcode" inputmode="text" autocapitalize="none" maxlength="16" />
+  <div class="err" id="err"></div>
+  <button class="btn fade" onclick="unlock()">Enter</button>
+  <div class="tiny fade" style="margin-top:.75rem">Tip: Add to Home Screen after opening for an app-like feel.</div>
+</div>
+
+<div class="footer">
+  <button class="btn" onclick="toggleAudio()" id="audioBtn">Play Music</button>
+  <button class="btn" onclick="shareLink()">Share</button>
+</div>
+
+<audio id="bgm" loop preload="auto" crossorigin="anonymous">
+  <source src="https://cdn.pixabay.com/download/audio/2022/09/30/audio_5a5e15e2c7.mp3?filename=late-night-chill-124138.mp3" type="audio/mpeg">
+</audio>
+
+<div class="wrap">
+
+  <!-- 1: Cover - golden vineyard at dusk -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1502462041640-b3d7b03dff22?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h1>Napa Awaits… Just Us</h1>
+      <p class="note">A weekend of wine, warmth, and getting lost in each other.</p>
+      <div style="margin-top:.6rem">
+        <span class="pill">Golden Hour</span>
+        <span class="pill">Private Tastings</span>
+        <span class="pill">Sunset Views</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2: Personal Note - candlelit lounge -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1529856144923-8f4f7c043f66?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>For Tony</h2>
+      <p class="note">I want us — unhurried, unrushed, uninterrupted. Let’s sip, wander, and end every night under Napa’s warm sky. — Liz</p>
+    </div>
+  </section>
+
+  <!-- 3: Romantic Highlights - elegant tasting room -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1506059612708-99d6c258160e?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Romantic Highlights</h2>
+      <p>Private tasting, castle tour, and an intimate sunset dinner.</p>
+      <div class="grid">
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fwww.stagsleapwinecellars.com%2Fvisit" alt="QR">
+          <div class="meta"><strong>Stag’s Leap Wine Cellars</strong><br><span class="tiny">Reserve a private tasting</span></div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fcastellodiamorosa.com%2Fvisit" alt="QR">
+          <div class="meta"><strong>Castello di Amorosa</strong><br><span class="tiny">Castle tour & tasting</span></div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fwww.alphaomegawinery.com%2Fvisit" alt="QR">
+          <div class="meta"><strong>Alpha Omega</strong><br><span class="tiny">Courtyard flight</span></div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fresy.com" alt="QR">
+          <div class="meta"><strong>Sunset Dinner</strong><br><span class="tiny">Reserve a table</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4: Exclusive Experiences - sunrise balloon -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1491555103944-7c647fd857e6?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Exclusive Experiences</h2>
+      <div class="grid">
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fballoonrides.com" alt="QR">
+          <div class="meta"><strong>Hot-Air Balloon</strong><br><span class="tiny">Sunrise over vineyards</span></div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2Faubergeresorts.com%2Fsolage%2Fspa" alt="QR">
+          <div class="meta"><strong>Spa Day</strong><br><span class="tiny">Mineral soak & massage</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: Hidden Gems - vineyard overlook -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1504712598893-24159a89200e?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Hidden Gems</h2>
+      <p>Quiet overlooks, boutique tasting rooms, and cozy lounges.</p>
+      <div class="grid">
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fwww.oakvillewinegrowers.com%2Fmap" alt="QR">
+          <div class="meta"><strong>Scenic Overlook</strong><br><span class="tiny">Oakville Viewpoint</span></div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fwww.beringer.com%2Fvisit" alt="QR">
+          <div class="meta"><strong>Beringer Reserve</strong><br><span class="tiny">Heritage tasting</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6: Day 1 — Arrival -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1541542684-4a908d9e4859?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Day 1 — Arrival & Unwind</h2>
+      <p>Check-in, poolside toast, golden-hour stroll through the vines.</p>
+    </div>
+  </section>
+
+  <!-- 7: Night 1 — Firelight -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Night 1 — Firelight & Fondue</h2>
+      <p>Cozy lounge, wine by the fireplace, slow dancing back in the room.</p>
+    </div>
+  </section>
+
+  <!-- 8: Day 2 — Tastings -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1528821154947-1aa3d1e54d3f?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Day 2 — Tastings & Castle</h2>
+      <p>Stag’s Leap flight, Castello tour, courtyard lunch.</p>
+    </div>
+  </section>
+
+  <!-- 9: Night 2 — Sunset Dinner -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1520986606214-8b456906c813?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Night 2 — Sunset Dinner</h2>
+      <p>Table for two, candlelight, a slow walk back under the stars.</p>
+    </div>
+  </section>
+
+  <!-- 10: Day 3 — Balloon & Spa -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1511914265872-c406725a4cd1?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Day 3 — Balloon & Spa</h2>
+      <p>Sunrise balloon ride, couples massage, late checkout.</p>
+    </div>
+  </section>
+
+  <!-- 11: Night 3 — Last Pour -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1519692933481-e162a57d6721?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Night 3 — Last Pour</h2>
+      <p>Balcony dessert, soft jazz, just us.</p>
+    </div>
+  </section>
+
+  <!-- 12: Closing + QR Hub -->
+  <section style="background-image:url('https://images.unsplash.com/photo-1526312426976-593c2d0fb2ef?w=1800&q=80&auto=format&fit=crop');">
+    <div class="veil"></div>
+    <div class="card fade">
+      <h2>Ready, Set, Sip 🍷</h2>
+      <p>Quick links to book everything in minutes.</p>
+      <div class="grid">
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2Faubergeresorts.com%2Fsolage" alt="QR">
+          <div class="meta"><strong>Hotel</strong><br><span class="tiny">Book our stay</span></div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fopen.spotify.com%2Fplaylist%2F37i9dQZF1DX8j1rlfmgK6S" alt="QR">
+          <div class="meta"><strong>Jazz Playlist</strong><br><span class="tiny">Set the mood</span></div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fmaps.apple.com%2F?q=Napa%20Valley" alt="QR">
+          <div class="meta"><strong>Map</strong><br><span class="tiny">All locations</span></div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fresy.com" alt="QR">
+          <div class="meta"><strong>Dinner</strong><br><span class="tiny">Reserve a table</span></div>
+        </div>
+      </div>
+      <div class="credits">Tip: Add this to your Home Screen (Share → Add to Home Screen) for a full-screen feel.</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const PASSCODE = "Justus";
+  const gate = document.getElementById('gate');
+  const codeInput = document.getElementById('code');
+  const err = document.getElementById('err');
+  const audio = document.getElementById('bgm');
+  const btn = document.getElementById('audioBtn');
+
+  function unlock(){
+    const v = (codeInput.value || '').trim();
+    if(v !== PASSCODE){
+      err.textContent = "Incorrect code. Try again.";
+      return;
+    }
+    gate.classList.add('hidden');
+    document.body.focus();
+    playMusic();
+  }
+
+  function playMusic(){
+    if(!audio) return;
+    audio.play().then(()=>{
+      btn.textContent = 'Pause Music';
+    }).catch(()=>{
+      btn.textContent = 'Play Music';
+    });
+  }
+  function toggleAudio(){
+    if(audio.paused){ playMusic(); }
+    else { audio.pause(); btn.textContent='Play Music'; }
+  }
+  async function shareLink(){
+    const shareData = { title:'Napa Awaits — Just Us', text:'Open this ❤️', url: window.location.href };
+    try{
+      if(navigator.share){ await navigator.share(shareData); }
+      else { prompt('Copy this link to share:', window.location.href); }
+    }catch(e){}
+  }
+
+  codeInput.addEventListener('keydown', e => { if(e.key === 'Enter') unlock(); });
+</script>
+</body>
+</html>
